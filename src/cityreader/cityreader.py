@@ -1,10 +1,20 @@
+import csv
+
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
 
+class City:
+  def __init__(self, name, lat, lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
+
+  def __str__(self):
+    return 'City('+self.name+', '+str(self.lat)+', '+str(self.lon)+')'
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
-#
+
 # In the body of the `cityreader` function, use Python's built-in "csv" module 
 # to read this file so that each record is imported into a City instance. Then
 # return the list with all the City instances from the function.
@@ -17,17 +27,23 @@
 cities = []
 
 def cityreader(cities=[]):
+  with open('cities.csv', 'r') as file:
+      reader = csv.reader(file)
+      next(reader)
+      # columns_read = [1]
+      for row in reader:
+        cities.append(City(str(row[0]),float(row[3]),float(row[4])))
+      return cities
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
-    return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
 for c in cities:
-    print(c)
+    print(f"{c.name}, {c.lat}, {c.lon}")
+print(len(cities))
 
 # STRETCH GOAL!
 #
@@ -63,6 +79,17 @@ for c in cities:
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
   within = []
+  lats = [float(lat1), float(lat2)]
+  # sort lats and lons 
+  lats.sort()
+  lons = [float(lon1), float(lon2)]
+  lons.sort()
+  # compare each city
+  for city in cities:
+          if city.lon >= lons[0] and city.lon <= lons[1]:
+              if city.lat >= lats[0] and city.lat <= lats[1]:
+                  within.append(city)
+  
 
   # TODO Ensure that the lat and lon valuse are all floats
   # Go through each city and check to see if it falls within 
